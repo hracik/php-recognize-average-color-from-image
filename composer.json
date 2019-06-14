@@ -1,0 +1,21 @@
+{
+    "name": "hracik/php-recognize-average-color-from-image",
+    "description": "Recognize average color from image.",
+    "license": "MIT",
+    "require-dev": {
+        "phpunit/phpunit": "8"
+    },
+    "require": {
+        "ext-imagick": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Hracik\\RecognizeAverageColorFromImage\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Hracik\\RecognizeAverageColorFromImage\\Tests\\": "tests/"
+        }
+    }
+}

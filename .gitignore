@@ -1,0 +1,4 @@
+###> custom ignore rules ###
+/.idea/
+/vendor/
+.phpunit.result.cache
