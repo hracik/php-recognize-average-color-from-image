@@ -1,6 +1,7 @@
-# Create image from text
+# Recognize color from image
 
-Create image from text. Custom text, text angle, text padding, font size and font type.
+Recognize average color from image - can be external image URL or local file.
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running
