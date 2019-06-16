@@ -32,9 +32,9 @@ class RecognizeAverageColorFromImageTest extends TestCase
 			[__DIR__.'/../example/example1.jpg', RecognizeAverageColorFromImage::RETURN_STRING_HEX, null, '#C17D49'],
 			[__DIR__.'/../example/example1.jpg', RecognizeAverageColorFromImage::RETURN_STRING_RGB, null, 'srgb(193,125,73)'],
 			['unknown-path', RecognizeAverageColorFromImage::RETURN_STRING_HEX, [], false],
-			[__DIR__.'/../example/example3.jpg', RecognizeAverageColorFromImage::RETURN_STRING_HEX, [], '#658FAD'],
-			[__DIR__.'/../example/example3.jpg', RecognizeAverageColorFromImage::RETURN_STRING_HEX, ['lightness' => 0.2], '#233542'],
-			[__DIR__.'/../example/example2.jpg', RecognizeAverageColorFromImage::RETURN_STRING_HEX, ['lightness' => 0.3, 'saturation' => 0.6], '#707A1E'],
+			[__DIR__.'/../example/example3.jpg', RecognizeAverageColorFromImage::RETURN_STRING_HEX, [], '#6590AE'],
+			[__DIR__.'/../example/example3.jpg', RecognizeAverageColorFromImage::RETURN_STRING_HEX, ['lightness' => 0.2], '#233643'],
+			[__DIR__.'/../example/example2.jpg', RecognizeAverageColorFromImage::RETURN_STRING_HEX, ['lightness' => 0.3, 'saturation' => 0.6], '#707A1F'],
 		];
 	}
 }

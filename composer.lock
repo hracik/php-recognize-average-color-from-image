@@ -4,8 +4,39 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bee7168294db6aa0f1f61b0082531f2a",
-    "packages": [],
+    "content-hash": "6d571caf27977c8fbabbad0d77e1f756",
+    "packages": [
+        {
+            "name": "hracik/php-color-converter",
+            "version": "0.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hracik/php-color-converter.git",
+                "reference": "b260bfa7cd01ee97a6b02c8192c9b148251c9908"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hracik/php-color-converter/zipball/b260bfa7cd01ee97a6b02c8192c9b148251c9908",
+                "reference": "b260bfa7cd01ee97a6b02c8192c9b148251c9908",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Hracik\\ColorConverter\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Color converter.",
+            "time": "2019-06-16T18:12:59+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "doctrine/instantiator",
@@ -1487,7 +1518,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "ext-gd": "*"
+        "ext-imagick": "*"
     },
     "platform-dev": []
 }

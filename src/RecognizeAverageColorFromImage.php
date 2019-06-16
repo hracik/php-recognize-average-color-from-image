@@ -1,6 +1,7 @@
 <?php
 namespace Hracik\RecognizeAverageColorFromImage;
 
+use Hracik\ColorConverter\ColorConverter;
 use Imagick;
 use ImagickPixel;
 use Throwable;
@@ -32,26 +33,33 @@ class RecognizeAverageColorFromImage
 	        $pixels = $image->getImageHistogram();
 	        /** @var ImagickPixel$pixel */
 	        $pixel = reset($pixels);
-
 	        if (null !== $options) {
 	        	return self::alterAverageColor($pixel->getHSL(), $options, $returnType);
 	        }
 
 	        if ($returnType == self::RETURN_STRING_HEX) {
-		        $RGB = $pixel->getColor();
-		        return sprintf('#%02X%02X%02X', $RGB['r'], $RGB['g'], $RGB['b']);
+		        $rgb = $pixel->getColor();
+		        //remove array keys
+		        $rgb = array_values($rgb);
+		        return ColorConverter::rgb2hex($rgb);
 	        }
 	        if ($returnType == self::RETURN_STRING_RGB) {
 		        return $pixel->getColorAsString();
 	        }
 	        if ($returnType == self::RETURN_ARRAY_RGB) {
-		        return $pixel->getColor();
+		        $rgb = $pixel->getColor();
+		        //remove array keys
+		        return array_values($rgb);
 	        }
 	        if ($returnType == self::RETURN_ARRAY_RGB_NORMALIZED) {
-		        return $pixel->getColor(true);
+		        $rgbNormalized = $pixel->getColor(true);
+		        //remove array keys
+		        return array_values($rgbNormalized);
 	        }
 	        if ($returnType == self::RETURN_ARRAY_HSL) {
-		        return $pixel->getHSL();
+		        $hsl = $pixel->getHSL();
+		        //remove array keys
+		        return array_values($hsl);
 	        }
         } catch(Throwable $e) {
             throw new RecognizeAverageColorException($e->getMessage());
@@ -61,83 +69,42 @@ class RecognizeAverageColorFromImage
     }
 
 	/**
-	 * @param $HSL
+	 * @param $hsl
 	 * @param $options
 	 * @param $returnType
 	 * @return array|string|null
 	 * @throws RecognizeAverageColorException
 	 */
-	private static function alterAverageColor($HSL, $options, $returnType)
+	private static function alterAverageColor($hsl, $options, $returnType)
 	{
 		if (!empty($options['saturation'])) {
-			$HSL['saturation'] = $options['saturation'];
+			$hsl['saturation'] = $options['saturation'];
 		}
 		if (!empty($options['lightness'])) {
-			$HSL['luminosity'] = $options['lightness'];
+			$hsl['luminosity'] = $options['lightness'];
 		}
 
+		$hsl = array_values($hsl);
 		if ($returnType == self::RETURN_ARRAY_HSL) {
-			return $HSL;
+			return $hsl;
 		}
 
 		//get RGB from HSL, then return what requested
-		$normalizedRGB = self::_color_hsl2rgb($HSL);
+		$rgb = ColorConverter::hsl2rgb($hsl);
 		if ($returnType == self::RETURN_ARRAY_RGB_NORMALIZED) {
-			return $normalizedRGB;
+			return array_map(function($toNormalize) { return $toNormalize / 255;}, $rgb);
 		}
 
-		$RGB = array_map(function($normalized) { return $normalized * 255;}, $normalizedRGB);
 		if ($returnType == self::RETURN_STRING_HEX) {
-			return sprintf('#%02X%02X%02X', $RGB['r'], $RGB['g'], $RGB['b']);
+			return ColorConverter::rgb2hex($rgb);
 		}
 		if ($returnType == self::RETURN_STRING_RGB) {
-			return sprintf('rgb(%d,%d,%d)', $RGB['r'], $RGB['g'], $RGB['b']);
+			return sprintf('rgb(%d,%d,%d)', $rgb[0], $rgb[1], $rgb[2]);
 		}
 		if ($returnType == self::RETURN_ARRAY_RGB) {
-			return $RGB;
+			return $rgb;
 		}
 
 		throw new RecognizeAverageColorException('Unknown return type.');
 	}
-
-	/**
-	 * Convert a HSL triplet into RGB
-	 * @param $hsl
-	 * @return array
-	 */
-    private static function _color_hsl2rgb($hsl)
-    {
-        $h = $hsl['hue'];
-        $s = $hsl['saturation'];
-        $l = $hsl['luminosity'];
-        $m2 = ($l <= 0.5) ? $l * ($s + 1) : $l + $s - $l*$s;
-        $m1 = $l * 2 - $m2;
-        return array(
-        	'r' => self::_color_hue2rgb($m1, $m2, $h + 0.33333),
-	        'g' => self::_color_hue2rgb($m1, $m2, $h),
-	        'b' => self::_color_hue2rgb($m1, $m2, $h - 0.33333)
-        );
-    }
-
-	/**
-	 * Helper function for _color_hsl2rgb().
-	 * @param $m1
-	 * @param $m2
-	 * @param $h
-	 * @return float|int
-	 */
-    private static function _color_hue2rgb($m1, $m2, $h)
-    {
-        $h = ($h < 0) ? $h + 1 : (($h > 1) ? $h - 1 : $h);
-        if ($h * 6 < 1) {
-        	return $m1 + ($m2 - $m1) * $h * 6;
-        }
-        if ($h * 2 < 1) {
-        	return $m2;
-        }
-        if ($h * 3 < 2) {
-        	return $m1 + ($m2 - $m1) * (0.66666 - $h) * 6;
-        }
-        return $m1;
-    }
 }
